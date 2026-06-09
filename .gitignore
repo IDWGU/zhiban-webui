@@ -6,7 +6,6 @@ sidecar/.venv/
 dist/
 dist-electron/
 dist-web/
-release/
 sidecar-dist/
 
 # Python

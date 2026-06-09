@@ -1,0 +1,37 @@
+# 知伴 Sidecar 依赖
+# Python 3.12+
+
+# Web 框架
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+websockets>=14.0
+
+# OCR (Phase 1: macOS Vision 通过 PyObjC 桥接)
+pyobjc-framework-Vision>=11.0
+pyobjc-framework-Quartz>=11.0
+pyobjc-framework-ScreenCaptureKit>=11.0
+
+# RAG
+chromadb>=0.6.0
+sentence-transformers>=3.3.0
+networkx>=3.4.0
+pyyaml>=6.0
+
+# LLM
+httpx>=0.28.0  # API 调用 + llama-server 子进程 HTTP 通信
+openai>=1.60.0  # DeepSeek 兼容 OpenAI SDK
+mlx-lm>=0.21.0  # Apple Silicon 原生推理引擎
+peft>=0.14.0  # MLX/transformers 模型加载依赖
+
+# PDF & DOCX
+PyMuPDF>=1.25.0
+python-docx>=1.1.0
+
+# 系统监控
+psutil>=6.0.0
+
+# 工具
+python-dotenv>=1.1.0
+pydantic>=2.10.0
+numpy>=2.2.0
+python-multipart>=0.0.18  # 文件上传
