@@ -1,0 +1,63 @@
+appId: com.zhiban.paper-companion
+productName: "知伴"
+copyright: "Copyright © 2026"
+
+# Apple Silicon (M1/M2/M3/M4) arm64 only — 不支持 Intel Mac
+
+directories:
+  output: release
+  buildResources: build
+
+files:
+  - dist/**/*
+  - dist-electron/**/*
+  - package.json
+
+extraResources:
+  - from: sidecar-dist/
+    to: sidecar-dist/
+    filter:
+      # 仅打包必要文件，排除开发/调试残留
+      - "**/*"
+      - "!**/__pycache__/**"
+      - "!**/*.pyc"
+      - "!**/.DS_Store"
+      - "!**/.cache/**"
+      - "!**/.chroma/**"
+      - "!**/.conversations/**"
+      - "**/.conversations/sidecar.json"  # 保留 LLM 模型配置文件
+      - "!**/.env"
+      - "!**/tests/**"
+      - "!**/*_test.py"
+      - "!**/test_*.py"
+
+mac:
+  category: public.app-category.education
+  icon: build/icon.icns
+  target:
+    - target: dmg
+      arch:
+        - arm64
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+  hardenedRuntime: true
+  extendInfo:
+    NSCameraUsageDescription: "知伴需要屏幕录制权限以识别您正在阅读的论文段落"
+    LSMinimumSystemVersion: "13.0"
+
+dmg:
+  title: "知伴 ZhiBan"
+  window:
+    width: 540
+    height: 380
+  contents:
+    - x: 130
+      y: 220
+    - x: 410
+      y: 220
+      type: link
+      path: /Applications
+    - x: 130
+      y: 380
+      type: file
+      path: build/gatekeeper-fix.txt

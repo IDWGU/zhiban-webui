@@ -1,0 +1,53 @@
+# Dependencies
+node_modules/
+sidecar/.venv/
+
+# Build output
+dist/
+dist-electron/
+dist-web/
+release/
+sidecar-dist/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.egg-info/
+
+# IDE / OS
+.DS_Store
+.idea/
+.vscode/
+
+# Runtime state
+.conversations/
+.chroma/
+.chroma.bak/
+*.log
+
+# Sensitive
+sidecar/.env
+.env
+
+# Dev artifacts
+debug-audio/
+pending/
+sidecar/tests/
+
+# PyInstaller
+*.spec
+
+# Large model files
+models/bundled/
+models/translation/
+*.gguf
+*.part
+
+# Brain uploads & library (PDFs)
+brain/_uploads/
+brain/library/
+
+# Cache
+.cache/
