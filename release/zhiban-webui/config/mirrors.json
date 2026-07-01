@@ -1,0 +1,46 @@
+{
+  "mirrors": [
+    {"name": "hf-mirror.com", "url": "https://hf-mirror.com"},
+    {"name": "huggingface.co", "url": "https://huggingface.co"},
+    {"name": "modelscope.cn", "url": "https://huggingface.modelscope.cn"},
+    {"name": "aliendao.cn", "url": "https://aliendao.cn"}
+  ],
+  "models": {
+    "qwopus-9b": {
+      "name": "Qwopus3.5-9B-v3 (Q4_K_M)",
+      "repo": "Jackrong/Qwopus3.5-9B-v3-GGUF",
+      "file": "Qwopus3.5-9B-v3.Q4_K_M.gguf",
+      "dest": "models/llm",
+      "size_hint": "~5.4GB",
+      "required": false,
+      "note": "主力对话模型，推荐至少有一个 LLM 模型"
+    },
+    "qwopus-4b": {
+      "name": "Qwopus3.5-4B-v3 (Q4_K_M)",
+      "repo": "Jackrong/Qwopus3.5-4B-v3-GGUF",
+      "file": "Qwen3.5-4B.Q4_K_M.gguf",
+      "dest": "models/llm",
+      "size_hint": "~2.6GB",
+      "required": false,
+      "note": "轻量对话模型，适合低内存设备"
+    },
+    "hy-mt2": {
+      "name": "Hy-MT2-1.8B (Q4_K_M)",
+      "repo": "tencent/Hy-MT2-1.8B-GGUF",
+      "file": "Hy-MT2-1.8B-Q4_K_M.gguf",
+      "dest": "models/translation",
+      "size_hint": "~1.1GB",
+      "required": true,
+      "note": "腾讯混元翻译专用模型"
+    },
+    "jina-embedding": {
+      "name": "jina-embeddings-v5-text-nano",
+      "repo": "jinaai/jina-embeddings-v5-text-nano",
+      "dest": "models/embedding",
+      "size_hint": "~0.5GB",
+      "required": true,
+      "downloader": "python",
+      "note": "向量嵌入模型，通过 sentence-transformers 自动下载"
+    }
+  }
+}

@@ -1,0 +1,670 @@
+/* ===== Proma-style CSS Custom Properties (HSL) ===== */
+
+/* KaTeX math rendering — inherit text color for dark/light themes */
+.markdown-content .katex,
+.streaming-markdown .katex {
+  color: inherit;
+}
+
+[data-theme="dark"] {
+  /*
+   * Depth hierarchy (远 → 近)，亮度逐级递增:
+   *   shell(3-5%) < panel(7%) < popover(9%) < dialog(12%) < muted(15%) < accent(30%)
+   *
+   *   shell-gradient  — 最暗，纯装饰背景
+   *   --background    — 面板工作面，shadow-xl 浮于 shell 上
+   *   --popover       — 右键菜单/下拉，稍亮于面板
+   *   --dialog        — 弹窗，亮于面板 + 特殊光晕
+   *   --muted         — 面板内次级区（底栏、状态条、tab 栏）
+   *   --accent        — hover 高亮，明显可见
+   */
+
+  /* Base */
+  --background: 220 13% 7%;        /* 面板 — Proma zinc-900 */
+  --foreground: 0 0% 96%;
+  --muted: 220 13% 15%;            /* 次级区 — 接近 Proma 14.9% */
+  --muted-foreground: 0 0% 60%;
+  --border: 220 13% 15%;           /* 边框 = muted */
+  --input: 220 13% 15%;
+  --ring: 142 38% 58%;
+
+  /* Semantic */
+  --primary: 142 38% 58%;          /* 暖调绿 accent */
+  --primary-foreground: 0 0% 98%;
+  --secondary: 220 13% 15%;
+  --secondary-foreground: 0 0% 96%;
+  --accent: 220 13% 30%;           /* hover — 明显可见 */
+  --accent-foreground: 0 0% 96%;
+  --destructive: 0 60% 52%;
+  --destructive-foreground: 0 0% 98%;
+
+  /* Surfaces */
+  --card: 220 13% 7%;              /* 卡片 = 面板（无缝融入） */
+  --card-foreground: 0 0% 96%;
+  --popover: 220 13% 9%;           /* 下拉 — 介于面板和弹窗之间 */
+  --popover-foreground: 0 0% 96%;
+  --dialog: 220 13% 12%;           /* 弹窗 — 比面板亮 */
+  --dialog-foreground: 0 0% 96%;
+  --content-area: 220 13% 7%;
+  --tooltip: 0 0% 14%;
+  --tooltip-foreground: 0 0% 98%;
+
+  /* Code */
+  --code-bg: 220 13% 12%;
+
+  /* Special */
+  --dashed-border: 0 0% 96% / 0.20;
+  --dashed-border-hover: 0 0% 96% / 0.35;
+  /* Shell 最亮处 5%，面板 7% — 拉开 2% 差距 */
+  --shell-gradient: linear-gradient(
+    145deg,
+    hsl(220, 13%, 3%) 0%,
+    hsl(220, 13%, 5%) 50%,
+    hsl(220, 13%, 4%) 100%
+  );
+
+  /* Legacy compatibility */
+  --bg-shell: hsl(220 13% 3%);
+  --bg-panel: hsl(var(--background));
+  --bg-footer: hsl(var(--muted));
+  --bg-elevated: hsl(var(--accent));
+  --bg-overlay: hsl(var(--muted));
+  --bg-titlebar: hsl(220 13% 6% / 0.85);
+
+  --text-primary: hsl(var(--foreground));
+  --text-secondary: hsl(var(--foreground) / 0.58);
+  --text-muted: hsl(var(--foreground) / 0.38);
+  --text-accent: hsl(var(--primary));
+  --text-soft: hsl(var(--foreground) / 0.78);
+
+  --btn-bg: hsl(var(--foreground) / 0.06);
+  --btn-bg-hover: hsl(var(--foreground) / 0.10);
+  --accent-bg-subtle: hsl(var(--primary) / 0.06);
+  --accent-bg: hsl(var(--primary) / 0.10);
+  --border-accent: hsl(var(--primary) / 0.25);
+  --btn-border: hsl(var(--border));
+
+  --user-bubble-bg: hsl(var(--primary) / 0.12);
+  --user-bubble-text: hsl(var(--primary) / 0.88);
+
+  /* Status dots */
+  --dot-blue: #42a5f5;
+  --dot-green: #4caf50;
+  --dot-yellow: #ffc107;
+  --dot-red: #f44336;
+
+  /* Scrollbar */
+  --scrollbar-thumb: hsl(var(--foreground) / 0.10);
+  --scrollbar-thumb-hover: hsl(var(--foreground) / 0.20);
+
+  /* Tags & badges */
+  --tag-bg: hsl(var(--primary) / 0.10);
+  --tag-border: hsl(var(--primary) / 0.16);
+  --tag-text: hsl(var(--primary) / 0.85);
+
+  /* Citation */
+  --citation-accent: 210 80% 62%;
+  --citation-text: hsl(210 80% 72%);
+
+  /* Toast */
+  --toast-error-bg: hsl(0 35% 15%);
+  --toast-error-border: hsl(0 60% 52%);
+  --toast-warn-bg: hsl(40 45% 15%);
+  --toast-warn-border: hsl(40 75% 48%);
+  --toast-info-bg: hsl(210 45% 15%);
+  --toast-info-border: hsl(210 75% 52%);
+  --toast-success-bg: hsl(145 40% 12%);
+  --toast-success-border: hsl(145 55% 45%);
+}
+
+[data-theme="light"] {
+  /*
+   * Depth hierarchy (远 → 近):
+   *   shell-gradient  — 暖卡其色渐变背景（无交互，"桌面"层）
+   *   --background    — 暖白面板（工作区，浮在 shell 上）
+   *   --muted         — 浅暖灰（面板内的次级区域：底栏、状态条）
+   *   --dialog        — 亮白弹窗（最高层，聚焦操作）
+   */
+
+  /* Base */
+  --background: 40 25% 99%;       /* 暖白面板 */
+  --foreground: 36 10% 12%;       /* 深暖灰文字 */
+  --muted: 38 15% 94%;            /* 浅暖灰次级区 */
+  --muted-foreground: 36 8% 46%;  /* 次级文字 */
+  --border: 38 12% 88%;           /* 暖灰边框 */
+  --input: 38 12% 88%;
+  --ring: 142 30% 38%;            /* 聚焦环 */
+
+  /* Semantic */
+  --primary: 142 30% 34%;         /* 暖调绿 accent */
+  --primary-foreground: 0 0% 98%;
+  --secondary: 38 15% 94%;
+  --secondary-foreground: 36 10% 14%;
+  --accent: 38 12% 92%;           /* hover 态暖灰 */
+  --accent-foreground: 36 10% 14%;
+  --destructive: 0 58% 44%;
+  --destructive-foreground: 0 0% 98%;
+
+  /* Surfaces — 逐级变亮 */
+  --card: 40 25% 99%;
+  --card-foreground: 36 10% 12%;
+  --popover: 40 30% 100%;         /* 弹出层最亮 */
+  --popover-foreground: 36 10% 12%;
+  --dialog: 40 30% 100%;          /* 弹窗最亮 */
+  --dialog-foreground: 36 10% 12%;
+  --content-area: 40 25% 99%;
+  --tooltip: 36 10% 16%;
+  --tooltip-foreground: 0 0% 98%;
+
+  /* Code */
+  --code-bg: 38 15% 93%;
+
+  /* Special */
+  --dashed-border: 36 10% 14% / 0.30;
+  --dashed-border-hover: 36 10% 14% / 0.45;
+  /* 暖卡其色渐变 — 纸张/羊皮纸质感 */
+  --shell-gradient: linear-gradient(
+    145deg,
+    hsl(40, 22%, 93%) 0%,
+    hsl(37, 18%, 89%) 40%,
+    hsl(40, 20%, 91%) 100%
+  );
+
+  /* Legacy compatibility */
+  --bg-shell: hsl(40, 20%, 90%);
+  --bg-panel: hsl(var(--background));
+  --bg-footer: hsl(var(--muted));
+  --bg-elevated: hsl(var(--accent));
+  --bg-overlay: hsl(var(--muted));
+  --bg-titlebar: hsl(40 22% 93% / 0.88);
+
+  --text-primary: hsl(var(--foreground));
+  --text-secondary: hsl(var(--foreground) / 0.55);
+  --text-muted: hsl(var(--foreground) / 0.40);
+  --text-accent: hsl(var(--primary));
+  --text-soft: hsl(var(--foreground) / 0.75);
+
+  --btn-bg: hsl(var(--foreground) / 0.05);
+  --btn-bg-hover: hsl(var(--foreground) / 0.08);
+  --btn-border: hsl(var(--border));
+  --accent-bg-subtle: hsl(var(--primary) / 0.05);
+  --accent-bg: hsl(var(--primary) / 0.08);
+  --border-accent: hsl(var(--primary) / 0.22);
+
+  --user-bubble-bg: hsl(var(--primary) / 0.10);
+  --user-bubble-text: hsl(var(--primary));
+
+  --dot-blue: #1565c0;
+  --dot-green: #2e7d32;
+  --dot-yellow: #e65100;
+  --dot-red: #b71c1c;
+
+  --scrollbar-thumb: hsl(var(--foreground) / 0.10);
+  --scrollbar-thumb-hover: hsl(var(--foreground) / 0.20);
+
+  --tag-bg: hsl(var(--primary) / 0.08);
+  --tag-border: hsl(var(--primary) / 0.18);
+  --tag-text: hsl(var(--primary));
+
+  --citation-accent: 210 80% 35%;
+  --citation-text: hsl(210 80% 30%);
+
+  --waveform-bg: transparent;
+  --waveform-idle: hsl(var(--foreground) / 0.12);
+
+  --toast-error-bg: hsl(0 30% 94%);
+  --toast-error-border: hsl(0 58% 44%);
+  --toast-warn-bg: hsl(40 40% 92%);
+  --toast-warn-border: hsl(40 65% 40%);
+  --toast-info-bg: hsl(210 40% 92%);
+  --toast-info-border: hsl(210 65% 44%);
+  --toast-success-bg: hsl(145 35% 90%);
+  --toast-success-border: hsl(145 48% 38%);
+}
+
+/* ===== Base ===== */
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: hsl(var(--background));
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Light theme: html 底色与 shell 一致，避免闪白 */
+[data-theme="light"] html,
+[data-theme="light"] body,
+[data-theme="light"] #root {
+  background: hsl(40, 20%, 90%);
+}
+
+/* ===== App Shell ===== */
+
+.app-shell {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--shell-gradient);
+  color: hsl(var(--foreground));
+  overflow: hidden;
+  transition: background 0.35s ease, color 0.35s ease;
+}
+
+/* ===== Proma-style Panels ===== */
+
+.proma-panel {
+  background: hsl(var(--background));
+  border-radius: 1rem;           /* rounded-2xl */
+  overflow: hidden;
+  /* 暗色默认 — 面板在深色 shell 上浮起 */
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.03),
+    0 4px 24px -8px rgba(0,0,0,0.40),
+    0 2px 8px -4px rgba(0,0,0,0.24);
+}
+
+[data-theme="light"] .proma-panel {
+  box-shadow:
+    0 2px 12px -4px rgba(80, 60, 30, 0.10),
+    0 4px 20px -6px rgba(80, 60, 30, 0.08);
+}
+
+.proma-panel-elevated {
+  background: hsl(var(--dialog));
+  border-radius: 0.75rem;       /* rounded-xl */
+  /* 暗色默认 — Proma 弹窗光晕 */
+  box-shadow:
+    0 0 40px 8px rgba(255,255,255,0.06),
+    0 25px 50px -12px rgba(0,0,0,0.50),
+    0 8px 32px -8px rgba(0,0,0,0.30);
+}
+
+[data-theme="light"] .proma-panel-elevated {
+  box-shadow:
+    0 4px 24px -6px rgba(80, 60, 30, 0.14),
+    0 2px 8px -2px rgba(80, 60, 30, 0.08);
+}
+
+/* Panel gap — exposes shell gradient between panels */
+.panel-gap {
+  padding: 0.5rem;
+}
+
+/* ===== Proma-style Scrollbar ===== */
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+/* Hide scrollbar utility */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar { display: none; }
+
+/* ===== Proma-style Animations ===== */
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInZoom {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideOutRight {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(100%); }
+}
+
+/* SpinKit Grid — 3×3 cube wave */
+@keyframes spinner-cube {
+  0%, 70%, 100% { transform: scale3D(1, 1, 1); }
+  35% { transform: scale3D(0, 0, 1); }
+}
+
+.cursor-blink { animation: blink 0.8s infinite; }
+.pulse-dot { animation: pulse 1.5s infinite; }
+.message-enter { animation: fadeIn 0.2s ease-out; }
+.dialog-enter { animation: fadeInZoom 0.2s ease-out; }
+
+/* ===== Proma-style Button Behavior ===== */
+
+button {
+  transition: background 0.1s ease, color 0.1s ease, border-color 0.1s ease, opacity 0.2s ease;
+}
+button:hover { filter: brightness(1.1); }
+button:active { filter: brightness(0.92); transform: scale(0.98); }
+[data-theme="light"] button:hover { filter: brightness(0.95); }
+[data-theme="light"] button:active { filter: brightness(0.88); transform: scale(0.98); }
+
+/* ===== Proma-style Selected State ===== */
+
+.proma-selected {
+  background: hsl(var(--primary) / 0.10) !important;
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
+}
+
+[data-theme="dark"] .proma-selected {
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.15);
+}
+
+/* ===== Proma-style Dashed Border Entry ===== */
+
+.proma-dashed-entry {
+  border: 1px dashed hsl(var(--dashed-border)) !important;
+  background: hsl(var(--primary) / 0.05);
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.proma-dashed-entry:hover {
+  border-color: hsl(var(--dashed-border-hover)) !important;
+  background: hsl(var(--primary) / 0.10);
+}
+
+/* ===== Proma-style Status Left Accent Bar ===== */
+
+.proma-status-bar {
+  position: absolute;
+  left: 0.25rem;
+  top: 0.375rem;
+  bottom: 0.375rem;
+  width: 2px;
+  border-radius: 9999px;
+  transition: background 0.2s ease;
+}
+
+/* ===== Settings Card (Proma-style) ===== */
+
+.settings-card {
+  background: hsl(var(--card));
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.03), 0 1px 3px 0 rgba(0,0,0,0.06);
+}
+
+[data-theme="dark"] .settings-card {
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.08), 0 1px 3px 0 rgba(0,0,0,0.12);
+}
+
+/* ===== Drag-over Overlay (Proma-style) ===== */
+
+.app-shell.drag-over::after {
+  content: '放开以打开论文';
+  position: fixed; inset: 0;
+  border: 3px dashed hsl(var(--primary));
+  background: hsl(var(--background) / 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.25rem; font-weight: 600;
+  color: hsl(var(--primary));
+  z-index: 9999;
+  pointer-events: none;
+  letter-spacing: 0.05em;
+}
+
+/* ===== Electron Titlebar Drag Region ===== */
+
+.titlebar-drag {
+  -webkit-app-region: drag;
+  app-region: drag;
+}
+.titlebar-no-drag {
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+/* ===== Tooltip ===== */
+
+.proma-tooltip {
+  background: hsl(var(--tooltip));
+  color: hsl(var(--tooltip-foreground));
+  border-radius: 0.375rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  z-index: 10000;
+}
+
+/* ===== Context Divider (Proma-style dashed) ===== */
+
+.context-divider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0;
+}
+.context-divider::before,
+.context-divider::after {
+  content: '';
+  flex: 1;
+  border-top: 1px dashed hsl(var(--foreground) / 0.15);
+}
+
+/* ===== Hover Reveal (Proma pattern) ===== */
+
+.hover-reveal {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+*:hover > .hover-reveal,
+.hover-reveal-parent:hover .hover-reveal {
+  opacity: 1;
+}
+
+/* ===== Streaming indicator ===== */
+
+.streaming-dot {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: hsl(var(--primary) / 0.60);
+  animation: pulse 1.2s ease-in-out infinite;
+  margin-left: 0.25rem;
+  vertical-align: middle;
+}
+
+/* ===== Markdown content styles ===== */
+
+.markdown-content h1,
+.streaming-markdown h1 {
+  font-size: 1.5em; font-weight: 700;
+  margin: 0.8em 0 0.4em; line-height: 1.3;
+}
+.markdown-content h2,
+.streaming-markdown h2 {
+  font-size: 1.3em; font-weight: 600;
+  margin: 0.7em 0 0.35em; line-height: 1.3;
+}
+.markdown-content h3,
+.streaming-markdown h3 {
+  font-size: 1.15em; font-weight: 600;
+  margin: 0.6em 0 0.3em; line-height: 1.3;
+}
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6,
+.streaming-markdown h4,
+.streaming-markdown h5,
+.streaming-markdown h6 {
+  font-size: 1.05em; font-weight: 600;
+  margin: 0.5em 0 0.25em;
+}
+.markdown-content p,
+.streaming-markdown p {
+  margin: 0.4em 0;
+}
+.markdown-content ul,
+.markdown-content ol,
+.streaming-markdown ul,
+.streaming-markdown ol {
+  padding-left: 1.5em; margin: 0.4em 0;
+}
+.markdown-content li,
+.streaming-markdown li {
+  margin: 0.15em 0;
+}
+.markdown-content blockquote,
+.streaming-markdown blockquote {
+  border-left: 3px solid hsl(var(--primary) / 0.4);
+  padding-left: 0.8em; margin: 0.5em 0;
+  color: hsl(var(--foreground) / 0.75);
+}
+.markdown-content pre,
+.streaming-markdown pre {
+  background: hsl(var(--code-bg));
+  padding: 0.8em 1em; border-radius: 8px;
+  overflow-x: auto; margin: 0.5em 0;
+  font-size: 0.875em; line-height: 1.5;
+}
+.markdown-content pre code,
+.streaming-markdown pre code {
+  background: none; padding: 0; font-size: inherit;
+}
+.markdown-content code,
+.streaming-markdown code {
+  background: hsl(var(--foreground) / 0.10);
+  padding: 1px 5px; border-radius: 4px;
+  font-size: 0.875em;
+  font-family: 'Fira Code', Consolas, monospace;
+}
+[data-theme="light"] .markdown-content code,
+[data-theme="light"] .streaming-markdown code {
+  background: hsl(var(--foreground) / 0.08);
+}
+.markdown-content table,
+.streaming-markdown table {
+  border-collapse: collapse; width: 100%;
+  margin: 0.5em 0; font-size: 0.9em;
+}
+.markdown-content th,
+.markdown-content td,
+.streaming-markdown th,
+.streaming-markdown td {
+  border: 1px solid hsl(var(--border));
+  padding: 0.4em 0.8em; text-align: left;
+}
+.markdown-content th,
+.streaming-markdown th {
+  background: hsl(var(--muted)); font-weight: 600;
+}
+.markdown-content hr,
+.streaming-markdown hr {
+  border: none; border-top: 1px solid hsl(var(--border));
+  margin: 1em 0;
+}
+.markdown-content a,
+.streaming-markdown a {
+  color: hsl(var(--primary)); text-decoration: underline;
+}
+.markdown-content img,
+.streaming-markdown img {
+  max-width: 100%; border-radius: 6px;
+}
+.markdown-content strong,
+.streaming-markdown strong {
+  font-weight: 600;
+}
+.markdown-content em,
+.streaming-markdown em {
+  font-style: italic;
+}
+
+/* ── Agent tool call animations ── */
+/* spin / shimmer 已在 Animations 段定义，此处不重复 */
+
+@keyframes thinking-dots {
+  0%, 20% { content: ''; }
+  40% { content: '.'; }
+  60% { content: '..'; }
+  80%, 100% { content: '...'; }
+}
+
+/* ── Code block syntax highlighting ── */
+.code-block-container pre {
+  tab-size: 2;
+}
+.code-block-container .token.comment,
+.code-block-container .token.prolog,
+.code-block-container .token.doctype,
+.code-block-container .token.cdata {
+  color: #6a9955;
+  font-style: italic;
+}
+.code-block-container .token.punctuation {
+  color: #d4d4d4;
+}
+.code-block-container .token.property,
+.code-block-container .token.tag,
+.code-block-container .token.boolean,
+.code-block-container .token.number,
+.code-block-container .token.constant,
+.code-block-container .token.symbol {
+  color: #b5cea8;
+}
+.code-block-container .token.selector,
+.code-block-container .token.attr-name,
+.code-block-container .token.string,
+.code-block-container .token.char,
+.code-block-container .token.builtin {
+  color: #ce9178;
+}
+.code-block-container .token.operator,
+.code-block-container .token.entity,
+.code-block-container .token.url {
+  color: #d4d4d4;
+}
+.code-block-container .token.atrule,
+.code-block-container .token.attr-value,
+.code-block-container .token.keyword {
+  color: #569cd6;
+}
+.code-block-container .token.function,
+.code-block-container .token.class-name {
+  color: #dcdcaa;
+}
+.code-block-container .token.regex,
+.code-block-container .token.important,
+.code-block-container .token.variable {
+  color: #d16969;
+}
