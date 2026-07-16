@@ -44,9 +44,12 @@ models/translation/
 *.gguf
 *.part
 
-# Brain uploads & library (PDFs)
-brain/_uploads/
-brain/library/
+# Brain data (papers, knowledge graph, library)
+brain/
+release/zhiban-webui/brain/
+
+# Large model files
+release/zhiban-webui/models/
 
 # Cache
 .cache/

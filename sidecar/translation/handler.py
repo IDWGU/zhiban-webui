@@ -184,6 +184,7 @@ async def handle_translation_request(ws: WebSocket, msg: dict):
     model = msg.get("model", "") or config.LLM_MODEL
     base_url = msg.get("baseUrl", "") or config.LLM_BASE_URL
     use_local = msg.get("useLocal", False)  # 本地推理切换
+    style = msg.get("style", "academic")  # 翻译风格: academic | popular
 
     # 翻译强制禁用 thinking — 翻译是确定性任务，不需要推理
     thinking = False
@@ -278,6 +279,7 @@ async def handle_translation_request(ws: WebSocket, msg: dict):
             api_key=api_key, model=model, base_url=base_url,
             thinking=thinking, use_local=use_local,
             cancel_event=_translation_cancel,
+            style=style,
         )
     except asyncio.CancelledError:
         await ws.send_json({

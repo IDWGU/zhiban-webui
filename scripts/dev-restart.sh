@@ -20,5 +20,5 @@ pkill -f "vite" 2>/dev/null && echo "    ✅ 已停止 vite" || echo "    ℹ️
 
 sleep 1
 
-echo "==> 启动开发服务器..."
-npm run dev
+echo "==> 启动开发服务器 (纯 web 模式)..."
+npm run dev:web

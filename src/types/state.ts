@@ -98,6 +98,7 @@ export interface TranslationState {
   statusMsg: string
   lastScope: 'full' | 'page' | 'selection'
   lastPageNum: string
+  lastStyle: 'academic' | 'popular'
   extractOnly: boolean
   selectedRects: SelectionRect[]
 }

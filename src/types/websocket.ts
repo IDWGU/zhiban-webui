@@ -122,6 +122,7 @@ export interface TranslationRequestMessage {
   model?: string
   thinking?: boolean
   useLocal?: boolean
+  style?: 'academic' | 'popular'
 }
 
 export interface ComputeFileIdentityMessage {

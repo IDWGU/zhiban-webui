@@ -25,6 +25,11 @@ export default function OriginalPane({ filePath }: Props) {
   const [renderProgress, setRenderProgress] = useState('')
   const [ready, setReady] = useState(false)
 
+  // Debug: track activeSentenceId changes
+  useEffect(() => {
+    if (activeId) console.log('[DEBUG-HIGHLIGHT] activeSentenceId set to:', activeId)
+  }, [activeId])
+
   // Pan
   const [isPanning, setIsPanning] = useState(false)
   const panRef = useRef({ x: 0, y: 0, sx: 0, sy: 0 })
@@ -392,7 +397,7 @@ export default function OriginalPane({ filePath }: Props) {
     <div ref={containerRef} style={{ position: 'relative', padding: 0, userSelect: 'none' }}>
       {/* Zoom bar */}
       <div style={{
-        position: 'sticky', top: 0, zIndex: 10,
+        position: 'sticky', top: 0, left: 0, zIndex: 10,
         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
         padding: '4px 8px', background: 'var(--bg-elevated)',
         borderBottom: '1px solid var(--border)', backdropFilter: 'blur(8px)',
@@ -431,7 +436,7 @@ export default function OriginalPane({ filePath }: Props) {
                     src={url}
                     alt={`P${i + 1}`}
                     draggable={false}
-                    style={{ width: '100%', height: 'auto', boxShadow: '0 2px 8px rgba(0,0,0,0.3)', pointerEvents: 'none' }}
+                    style={{ display: 'block', width: '100%', height: 'auto', boxShadow: '0 2px 8px rgba(0,0,0,0.3)', pointerEvents: 'none' }}
                   />
                   {/* SVG sentence highlight overlay */}
                   <svg style={{
@@ -476,14 +481,16 @@ export default function OriginalPane({ filePath }: Props) {
                     return rects.map((r, ri) => (
                       <div
                         key={`hl-${sid}-${ri}`}
+                        data-highlight={sid}
+                        data-state={isActive ? 'active' : 'selected'}
                         style={{
                           position: 'absolute',
                           left: `${r.x * 100}%`,
                           top: `${r.y * 100}%`,
                           width: `${r.w * 100}%`,
                           height: `${r.h * 100}%`,
-                          background: isActive ? 'rgba(255, 235, 59, 0.35)' : 'rgba(66, 133, 244, 0.15)',
-                          border: isActive ? '2px solid rgba(255, 193, 7, 0.6)' : '2px solid rgba(66, 133, 244, 0.5)',
+                          background: isActive ? 'rgba(255, 235, 59, 0.55)' : 'rgba(66, 133, 244, 0.45)',
+                          border: isActive ? 'none' : '2px solid rgba(66, 133, 244, 0.85)',
                           borderRadius: 2,
                           zIndex: 12,
                           pointerEvents: 'none',

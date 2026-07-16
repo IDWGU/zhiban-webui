@@ -18,6 +18,7 @@ export default function TranslationToolbar({ filePath, onCancel }: Props) {
   const lastScope = useAppStore(s => s.translation.lastScope)
   const lastPageNum = useAppStore(s => s.translation.lastPageNum)
   const selectedRects = useAppStore(s => s.translation.selectedRects)
+  const lastStyle = useAppStore(s => s.translation.lastStyle)
   const [scope, setScopeState] = useState<'full' | 'page' | 'selection'>(lastScope)
   const [pageNum, setPageNum] = useState(lastPageNum)
   const [localError, setLocalError] = useState<string | null>(null)
@@ -83,7 +84,8 @@ export default function TranslationToolbar({ filePath, onCancel }: Props) {
     }, 350)
   }
 
-  const handleTranslate = () => {
+  const handleTranslate = (style?: 'academic' | 'popular') => {
+    const effectiveStyle = style || lastStyle
     if (!filePath) return
     const store = useAppStore.getState()
     const send = store.sendMessage || (window as any).__zhiban_wsSend
@@ -109,6 +111,7 @@ export default function TranslationToolbar({ filePath, onCancel }: Props) {
     }
 
     setLocalError(null)
+    store.setTranslationStyle(effectiveStyle)
     store.startTranslation(filePath)
     send({
       type: 'translation_request', filePath, scope, page,
@@ -119,6 +122,7 @@ export default function TranslationToolbar({ filePath, onCancel }: Props) {
       model: store.settings.llmModel || undefined,
       thinking: store.settings.thinkingMode,
       useLocal: isLocal || undefined,
+      style: effectiveStyle,
     })
   }
 
@@ -172,10 +176,32 @@ export default function TranslationToolbar({ filePath, onCancel }: Props) {
               </button>
             </>
           )}
-          <button onClick={handleTranslate} style={{ fontSize: 12, padding: '5px 14px', borderRadius: 6, border: '1px solid var(--accent)', background: 'var(--accent-bg)', color: 'var(--text-accent)', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600 }}>翻译</button>
+          <button
+            onClick={() => handleTranslate('academic')}
+            style={{
+              fontSize: 12, padding: '5px 14px', borderRadius: 6,
+              border: '1px solid var(--border)',
+              background: lastStyle === 'academic' ? 'var(--accent-bg)' : 'var(--btn-bg)',
+              color: lastStyle === 'academic' ? 'var(--text-accent)' : 'var(--text-primary)',
+              cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600,
+            }}
+          >学术翻译</button>
+          <button
+            onClick={() => handleTranslate('popular')}
+            style={{
+              fontSize: 12, padding: '5px 14px', borderRadius: 6,
+              border: '1px solid var(--accent)',
+              background: lastStyle === 'popular' ? 'var(--accent-bg)' : 'var(--btn-bg)',
+              color: lastStyle === 'popular' ? 'var(--text-accent)' : 'var(--text-primary)',
+              cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600,
+            }}
+          >通俗翻译</button>
         </>
       ) : (
         <>
+          <span style={{ fontSize: 11, padding: '2px 8px', borderRadius: 4, background: 'var(--accent-bg)', color: 'var(--text-accent)', fontFamily: 'inherit', fontWeight: 500 }}>
+            {lastStyle === 'popular' ? '通俗' : '学术'}
+          </span>
           <span style={{ fontSize: 12, color: 'var(--text-accent)' }}>{statusMsg || phaseLabel[phase] || phase}</span>
           {showSpinner && <Spinner />}
           <button onClick={handleCancel} style={{ fontSize: 11, padding: '4px 10px', borderRadius: 4, border: '1px solid var(--border)', background: 'var(--btn-bg)', color: 'var(--text-muted)', cursor: 'pointer', fontFamily: 'inherit' }}>取消</button>

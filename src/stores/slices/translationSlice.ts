@@ -33,6 +33,7 @@ export interface TranslationSlice {
   setScrollTargetId: (id: string | null) => void
   setScrollPageIndex: (index: number | null) => void
   setTranslationScope: (scope: TranslationState['lastScope'], pageNum: string) => void
+  setTranslationStyle: (style: TranslationState['lastStyle']) => void
   cancelTranslation: () => void
   toggleSentenceSelection: (sentenceId: string) => void
   selectSentenceRange: (sentenceIds: string[]) => void
@@ -63,6 +64,7 @@ export function createTranslationSlice(set: any, _get: any): TranslationSlice {
       statusMsg: '',
       lastScope: 'full',
       lastPageNum: '',
+      lastStyle: 'academic' as 'academic' | 'popular',
       extractOnly: false,
       selectedRects: [],
     },
@@ -329,6 +331,10 @@ export function createTranslationSlice(set: any, _get: any): TranslationSlice {
 
     setTranslationScope: (scope, pageNum) => set((state: any) => ({
       translation: { ...state.translation, lastScope: scope, lastPageNum: pageNum }
+    })),
+
+    setTranslationStyle: (style) => set((state: any) => ({
+      translation: { ...state.translation, lastStyle: style }
     })),
 
     cancelTranslation: () => set((state: any) => {

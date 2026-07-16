@@ -56,6 +56,34 @@ TRANSLATION_SYSTEM_PROMPT = (
     "如果原文已经是中文，直接输出原文。"
 )
 
+# 通俗化翻译 prompt：拆长句、去被动、用直白语言，保持学术严肃性
+TRANSLATION_SYSTEM_PROMPT_POPULAR = (
+    # ── 角色 ──
+    "你是中文学术翻译器，任务是将英文学术论文翻译为通俗化的中文版本。"
+    # ── 输出约束 ──
+    "必须只输出当前句的中文译文，禁止输出英文或原文，禁止加任何解释、注释、前缀。"
+    "禁止输出句子序号（如 [9]、[10]），序号仅用于标记原文位置。"
+    # ── 通俗化核心规则 ──
+    "拆解嵌套长句为短句，用直白的主动语态替代被动缠绕。"
+    "避免「在……的条件下」「通过……的方式」等冗余结构，直接陈述事实。"
+    "it is … that … 强调句改为直接陈述，不译「正是……」。"
+    "nevertheless/however/nonetheless 等弱转折词直接删除，让逻辑自然顺承。"
+    "remains to be elucidated / remains unclear 类迂回表达直译为「尚不清楚」。"
+    "taken together / in summary 类收束词保留但简化为「总之」或「综合来看」。"
+    # ── 风格 ──
+    "保持学术严肃性：通俗但不口语化、不玩梗、不网络化。"
+    "不加原文没有的评价性语言（如「令人惊叹」「这项研究非常精彩」）。"
+    "不使用「我们」「本文」之外的叙事视角。"
+    # ── 术语与格式 ──
+    "专业术语首次出现时保留英文缩写并括号标注中文全称，"
+    "如 \"XRD (X射线衍射)\"；后续出现直接用缩写。"
+    "所有数值、单位、统计量一字不改。"
+    "保留文献引用标记如 [69] 和 LaTeX 公式如 $H_2O_2$ 不变。"
+    "图表引用（Fig. 1a、Table 1 等）保持原文格式不翻译。"
+    # ── 兜底 ──
+    "如果原文已经是中文，直接输出原文。"
+)
+
 
 async def translate_blocks(
     blocks: list[Block],
@@ -68,6 +96,7 @@ async def translate_blocks(
     thinking: bool = False,
     use_local: bool = False,
     cancel_event: asyncio.Event | None = None,
+    style: str = "academic",
 ) -> dict:
     """
     Translate all sentences in blocks with KV cache optimization.
@@ -84,6 +113,9 @@ async def translate_blocks(
       使 system_prompt+原文前缀跨请求缓存，仅 prefill 变化的指令后缀。
     """
     from ..engine.llm_utils import ThinkingStreamFilter, strip_thinking_tags
+
+    # 根据翻译风格选择 system prompt
+    sys_prompt = TRANSLATION_SYSTEM_PROMPT_POPULAR if style == "popular" else TRANSLATION_SYSTEM_PROMPT
 
     local_engine = None
     if use_local:
@@ -123,14 +155,14 @@ async def translate_blocks(
 
         full_original = "\n\n".join(s.text for s in all_sents)
         full_original_tok = local_engine.count_tokens(full_original)
-        sys_tok = local_engine.count_tokens(TRANSLATION_SYSTEM_PROMPT)
+        sys_tok = local_engine.count_tokens(sys_prompt)
         base_tok = sys_tok + full_original_tok
 
         print(f"\n[翻译] 本地 {local_engine.backend_name}, {len(all_sents)}句, "
               f"n_ctx={n_ctx}, base={base_tok} tok", flush=True)
 
         # 构建稳定前缀（system + 全文原文）
-        cache_prefix = f"{TRANSLATION_SYSTEM_PROMPT}\n\n以下是待翻译论文原文：\n\n{full_original}\n\n"
+        cache_prefix = f"{sys_prompt}\n\n以下是待翻译论文原文：\n\n{full_original}\n\n"
 
         # 逐句翻译：利用 llama.cpp prefix caching 自动复用前缀
         # 首句翻译自然完成 prefill，无需独立 warmup（之前 160s 空跑）
@@ -143,7 +175,7 @@ async def translate_blocks(
 
             if prompt_tok >= max_ctx:
                 # 超出上下文：只用简洁 prompt（无全文上下文）
-                prompt_text = f"{TRANSLATION_SYSTEM_PROMPT}\n\n翻译为中文：\n{s.text}"
+                prompt_text = f"{sys_prompt}\n\n翻译为中文：\n{s.text}"
 
             t_start = time.time()
             full_translation = []
@@ -226,7 +258,7 @@ async def translate_blocks(
                     async for chunk in llm_proxy.chat_stream(
                         query=user_msg,
                         context="",
-                        system_prompt=TRANSLATION_SYSTEM_PROMPT,
+                        system_prompt=sys_prompt,
                         thinking=False,
                         api_key=api_key,
                         model=model or "deepseek-v4-flash",
